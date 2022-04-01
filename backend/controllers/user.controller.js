@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
                 id: user.id,
                 username: user.username
             }, config.TOKEN_SECRET);
-            res.header("auth-token", token).cookie('token', token, { httpOnly: true }).send({"token": token});
+            res.header("auth-token", token).cookie('token', token, { httpOnly: false }).send({"token": token});
         }
     }
     catch (err) {

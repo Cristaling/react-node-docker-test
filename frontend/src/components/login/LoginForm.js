@@ -3,12 +3,17 @@ import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+import {useCookies} from 'react-cookie'
 
 export default function LoginForm() {
     
     const [username, setUsername] = useState("admin");
     const [password, setPassword] = useState("password");
     const [error, setError] = useState(undefined);
+    const [cookies, setCookie, removeCookie] = useCookies();
+
+    let navigate = useNavigate();
 
     function validateForm() {
         return username.length > 0 && password.length > 0;
@@ -24,9 +29,11 @@ export default function LoginForm() {
         
         axios.post("/login", body)
           .then(function (response) {
-            if (response.data && response.data.token) {
-                localStorage.setItem('token', response.data.token);
-            }
+            // if (response.data && response.data.token) {
+            //     setCookie("token", response.data.token);
+            // }
+            // If we got a response, it is already in the cookie
+            navigate("/chart")
           })
           .catch(function (error) {
             if (error.response) {

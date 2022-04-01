@@ -1,28 +1,48 @@
-import logo from './logo.svg';
 import './App.css';
-import { Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import axios from 'axios';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate
+} from "react-router-dom";
+import { LoginPage } from './routes/login';
+import { ChartPage } from './routes/chart';
+import { LoadingPage } from './routes/loading';
 
 function App() {
+
+  // CSRF Protection
+  useEffect(() => {
+    const getCsrfToken = async () => {
+      const { data } = await axios.get('/csrf-token');
+      axios.defaults.headers.post['X-CSRF-Token'] = data.csrfToken;
+     };
+    getCsrfToken();
+  }, []);
+
+  // Handle not unauthorized responses
+  useEffect(() => {
+    axios.interceptors.response.use(function (response) {
+      return response;
+    }, function (error) {
+        if (401 === error.response.status) {
+          window.location.href = "/login";
+        } else {
+            return Promise.reject(error);
+        }
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Button href="login" variant="primary">Primary</Button>{' '}
-        <Link to="/login">Expenses</Link>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoadingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/chart" element={<ChartPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
