@@ -1,6 +1,7 @@
 import logo from './logo.svg';
-import {Alert} from 'react-bootstrap'
 import './App.css';
+import { Button } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
         >
           Learn React
         </a>
+        <Button href="login" variant="primary">Primary</Button>{' '}
+        <Link to="/login">Expenses</Link>
       </header>
     </div>
   );
