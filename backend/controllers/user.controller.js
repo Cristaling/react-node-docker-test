@@ -12,7 +12,10 @@ exports.login = async (req, res) => {
             const validPass = await bcrypt.compare(req.body.password, user.password);
             if (!validPass) return res.status(401).send("Email or Password is wrong");
 
-            const token = jwt.sign({id: user.id}, config.TOKEN_SECRET);
+            const token = jwt.sign({
+                id: user.id,
+                username: user.username
+            }, config.TOKEN_SECRET);
             res.header("auth-token", token).send({"token": token});
         }
     }
