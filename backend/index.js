@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const middleware = require('./middleware/auth.middleware')
 var cors = require('cors')
 const app = express()
@@ -7,6 +8,7 @@ const port = process.env.PORT || 3001;
 
 app.use(cors())
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 const userController = require('./controllers/user.controller');
 app.post('/login', userController.login);

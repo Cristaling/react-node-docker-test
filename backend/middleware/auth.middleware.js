@@ -2,7 +2,8 @@ const config = require("../config/config");
 const jwt = require("jsonwebtoken");
 
 exports.loggedIn = function (req, res, next) {
-    let token = req.header('Authorization');
+    // let token = req.header('Authorization');
+    let token = req.cookies.token;
     if (!token) return res.status(401).send("Access Denied");
 
     try {
