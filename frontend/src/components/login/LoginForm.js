@@ -1,29 +1,53 @@
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
+import axios from 'axios';
 
 export default function LoginForm() {
     
-    const [email, setEmail] = useState("admin");
+    const [username, setUsername] = useState("admin");
     const [password, setPassword] = useState("password");
+    const [error, setError] = useState(undefined);
 
     function validateForm() {
-        return email.length > 0 && password.length > 0;
+        return username.length > 0 && password.length > 0;
     }
 
     function handleSubmit(event) {
         event.preventDefault();
+
+        var body = {
+            username: username,
+            password: password
+        };
+        
+        axios.post("/login", body)
+          .then(function (response) {
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token);
+            }
+          })
+          .catch(function (error) {
+            if (error.response) {
+                setError(error.response.data);
+            }
+          });
     }
     
     return (
         <Form style={formStyle} onSubmit={handleSubmit}>
+            {error ? 
+            <Alert variant="danger" onClose={() => setError(undefined)} dismissible>
+                <h5>{error}</h5>
+            </Alert> : ""}
             <Form.Group style={formGroupStyle} size="lg" controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                     autoFocus
                     type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
             </Form.Group>
             <Form.Group style={formGroupStyle} size="lg" controlId="password">
@@ -34,7 +58,7 @@ export default function LoginForm() {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </Form.Group>
-            <Button style={buttonStyle} block size="lg" type="submit" disabled={!validateForm()}>
+            <Button style={buttonStyle} size="lg" type="submit" disabled={!validateForm()}>
                 Login
             </Button>
         </Form>
