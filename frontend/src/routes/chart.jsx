@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import LineChart from "../components/chart/LineChart";
 import useInterval from "../components/hooks/useInterval";
 import NavBar from "../components/navigation/Navbar";
+import axios from 'axios';
 import '../styles/chart.css'
 
 export const ChartPage = () => {
@@ -18,18 +19,31 @@ export const ChartPage = () => {
             tempData = tempData.slice(tempData.length - MAX_DATA)
         }
 
-        for (var i = 0; i < 4; i++) {
-            var nextNumber = Math.floor(Math.random() * 100);
-            var theTime = currentTime + i * 250;
-            tempData.push({
-                x: theTime,
-                y: nextNumber
-            })
-        }
+        axios.get("/chart?time=" + Date.now())
+            .then(function (response) {
+                if (!response.data) {
+                    return
+                }
 
-        setCurrentTime(currentTime + 4 * 250)
-        setData(tempData)
-        setSeries([{ data: tempData }])
+                tempData.push(...response.data)
+
+                setCurrentTime(currentTime + 4 * 250)
+                setData(tempData)
+                setSeries([{ data: tempData }])
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+
+        // for (var i = 0; i < 4; i++) {
+        //     var nextNumber = Math.floor(Math.random() * 100);
+        //     var theTime = currentTime + i * 250;
+        //     tempData.push({
+        //         x: theTime,
+        //         y: nextNumber
+        //     })
+        // }
     }, 1000);
 
     return (

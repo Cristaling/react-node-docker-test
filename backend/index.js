@@ -22,13 +22,8 @@ app.get('/csrf-token', (req, res) => {
 const userController = require('./controllers/user.controller');
 app.post('/login', userController.login);
 
-app.get('/logout', middleware.loggedIn, (req, res) => {
-  res.json({ message: 'Hello World!' })
-})
-
-app.get('/', middleware.loggedIn, (req, res) => {
-    res.json({ message: 'Hello World!' })
-})
+const dataController = require('./controllers/data.controller');
+app.get('/chart', middleware.loggedIn, dataController.getData)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
