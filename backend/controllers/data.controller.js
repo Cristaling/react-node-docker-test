@@ -35,6 +35,5 @@ exports.getData = async (req, res) => {
         time += i * 250
     }
 
-    console.log(result)
     res.send(result)
 }

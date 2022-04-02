@@ -33,6 +33,10 @@ export default function LoginForm() {
             //     setCookie("token", response.data.token);
             // }
             // If we got a response, it is already in the cookie
+            if (response.status !== 200) {
+                setError("Username or password were incorrect.")
+                return
+            }
             navigate("/chart")
           })
           .catch(function (error) {
