@@ -26,6 +26,9 @@ export default function LineChart({ data }) {
         markers: {
             size: 0
         },
+        tooltip: {
+            enabled: false
+        },
         xaxis: {
             type: 'datetime',
             range: 180000
