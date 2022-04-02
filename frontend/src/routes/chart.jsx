@@ -9,14 +9,19 @@ export const ChartPage = () => {
 
     const MAX_DATA = 720;
     const [series, setSeries] = useState([{ data: [] }]);
-    const [data, setData] = useState([]);
-    const [currentTime, setCurrentTime] = useState(1324508400000)
+    const [data1, setData1] = useState([]);
+    const [data2, setData2] = useState([]);
 
     useInterval(() => {
-        var tempData = [...data]
+        var tempData1 = [...data1]
+        var tempData2 = [...data2]
 
-        if (tempData.length > MAX_DATA) {
-            tempData = tempData.slice(tempData.length - MAX_DATA)
+        if (tempData1.length > MAX_DATA) {
+            tempData1 = tempData1.slice(tempData1.length - MAX_DATA)
+        }
+
+        if (tempData2.length > MAX_DATA) {
+            tempData2 = tempData2.slice(tempData2.length - MAX_DATA)
         }
 
         axios.get("/chart?time=" + Date.now())
@@ -25,25 +30,16 @@ export const ChartPage = () => {
                     return
                 }
 
-                tempData.push(...response.data)
+                tempData1.push(...response.data.data1)
+                tempData2.push(...response.data.data2)
 
-                setCurrentTime(currentTime + 4 * 250)
-                setData(tempData)
-                setSeries([{ data: tempData }])
-                console.log(response)
+                setData1(tempData1)
+                setData2(tempData2)
+                setSeries([{ data: tempData1 }, { data: tempData2 }])
             })
             .catch(function (error) {
                 console.log(error)
             });
-
-        // for (var i = 0; i < 4; i++) {
-        //     var nextNumber = Math.floor(Math.random() * 100);
-        //     var theTime = currentTime + i * 250;
-        //     tempData.push({
-        //         x: theTime,
-        //         y: nextNumber
-        //     })
-        // }
     }, 1000);
 
     return (
